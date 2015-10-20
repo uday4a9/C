@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libsafec
+Description: A safe coding library for C, ref ISO TR24731
+Version: 10052013
+URL: http://sourceforge.net/projects/safeclib/
+Libs: -L${libdir} -lsafec-1.0
+Cflags: -I${includedir}/safec-1.0 -I${libdir}/safec-1.0/include

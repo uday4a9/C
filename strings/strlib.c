@@ -44,10 +44,24 @@ char* fgets_es(char *str, ssize_t size)
     return str;
 }
 
+int strindex(char *mstr, char *sstr)
+{
+    // returns the index of sstr in mstr
+    int i, j, k;
+
+    for(i=0; *(mstr + i); i++) {
+        for(j=0, k=i; *(mstr + k) == *(sstr + j); j++, k++);
+        if( !*(sstr + j))
+            return i;
+    }
+    return -1;
+}
+
 int main()
 {
     char src[128], dst[128];
     char dummy[6];
+    int ind;
     puts("This whole string library implementation");
 
 #if 0
@@ -60,13 +74,16 @@ int main()
     __fpurge(stdin);
     fgets_es(dummy, 6);
     printf("STRLEN(%s) : %d\n", dummy, strlen_es(dummy));
-#endif
 
     printf("Enter a string : ");
     fgets(src, 127, stdin);
     printf("STRLEN(%s) : %d\n", src, strlen_es(src));
 
     printf("length of NULL: %d\n", strlen_es(NULL));
+#endif
+
+    ind =  strindex("he", "hello");
+    printf("Index : %d\n", ind); 
 
     return 0;
 }

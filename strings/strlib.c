@@ -59,29 +59,46 @@ int strindex_es(char *mstr, char *sstr)
 
 char *strtok_es(char *str, char *tokens)
 {
+    /* parameters:
+     *  str -> for first call it should be the string, from
+     *         second call onwards it would be NULL
+     *  tokens -> needs to pass the tokens in a string
+     *
+     *  for only first call string should be passed. for remaining
+     *  calls onwards, needs to track of last visted string. This 
+     *  will be helpful while tracking the next token.
+     */
     int i=0, j=0, found=0;
     static char *last;
 
-
     if(str == NULL) {
-        // already found the string
         str = last;
+        // from second call onwards it should be processed 
+        // as the last visited location.
+        if (last == NULL)
+            return NULL;
     }
     
-    for(i=0; *(str + i); i++){
+    for(i=0; *(str + i); i++) {
         for(j=0; *(tokens + j); j++) {
            if(*(tokens + j) == *(str + i)) {
+               // update the static pointer value, and make the
+               // string as null terminated, marked as found = 0
+               last = str + i + 1;
+               *(str + i) = '\0';
                found = 1;
                break;
            }
         }
+        // if token found succesfully, break from outer loop.
         if(found == 1)
             break;
     }
-    if(!*(tokens+j)){
-        last = str + i + 1;
-        *(str + i) = '\0';
-    }
+
+    // if tokens anot avaialbe in the string, make static pointer
+    // as NULL. this will indicates finally as a termination NULL.
+    if(!found && !*(str + i))
+        last = NULL;
 
     return str;
 }
@@ -91,7 +108,7 @@ int main()
     char src[128], dst[128];
     char dummy[6];
     int ind;
-    char str[] = "Hello world how are you?", *res;
+    char str[] = "Hello world ho,w are you?", *res;
 
 #if 0
     puts("This whole string library implementation");
@@ -116,11 +133,14 @@ int main()
 //    ind =  strindex_es("he", "hello");
 //    printf("Index : %d\n", ind); 
 
-    res = strtok_es(str, " ");
+    // strtok function invokes repeatedly on a string to 
+    // tokenize the string as below.
+    res = strtok_es(str, ",");
     while(res) {
         puts(res);
-        res = strtok_es(NULL, " ");
+        res = strtok_es(NULL, ",");
     }
+    puts(str);
 
     return 0;
 }
